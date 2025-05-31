@@ -2,6 +2,7 @@ package Controller;
 
 import Model.*;
 import View.Vista;
+import Controller.FacturaPDF;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,54 +12,72 @@ public class Controlador {
     private Scanner sc = vista.getScanner();
 
     public void menuPrincipal() {
-        int opcion;
-        do {
-            vista.mostrarMenu();
-            opcion = vista.leerOpcion();
+    Scanner scanner = new Scanner(System.in);
+    int opcion;
+    do {
+        System.out.println("--- MENÚ PRINCIPAL ---");
+        System.out.println("1. Crear cliente");
+        System.out.println("2. Crear registrador");
+        System.out.println("3. Cargar consumo automático");
+        System.out.println("4. Calcular valor total");
+        System.out.println("5. Editar cliente");
+        System.out.println("6. Editar registrador");
+        System.out.println("7. Consumo mínimo y máximo");
+        System.out.println("8. Consumo por franjas");
+        System.out.println("9. Consumo por días");
+        System.out.println("10. Cargar consumo de un cliente específico");
+        System.out.println("11. Cambiar el consumo de una hora");
+        System.out.println("12. Generar factura PDF");
+        System.out.println("0. Salir");
+        System.out.print("Seleccione una opción: ");
+        opcion = scanner.nextInt();
+        scanner.nextLine(); // limpia buffer
 
-            switch (opcion) {
-                case 1:
-                    crearCliente();
-                    break;
-                case 2:
-                    crearRegistrador();
-                    break;
-                case 3:
-                    cargarConsumo();
-                    break;
-                case 4:
-                    calcularFactura();
-                    break;
-                case 5:
-                    editarCliente();
-                    break;
-                case 6:
-                    editarRegistrador();
-                    break;
-                case 7:
-                    verMinimoMaximo();
-                    break;
-                case 8:
-                    verFranjas();
-                    break;
-                case 9:
-                    verDias();
-                    break;
-                case 10:
-                    cargarConsumoClienteEspecifico();
-                    break;
-                case 11:
-                    modificarConsumoHora();
-                    break;
-                case 0:
-                    System.out.println("Saliendo...");
-                    break;
-                default:
-                    System.out.println("Opción inválida");
-                    break;
-            }
-        } while (opcion != 0);
-    }
+        switch (opcion) {
+            case 1:
+                crearCliente();
+                break;
+            case 2:
+                crearRegistrador();
+                break;
+            case 3:
+                cargarConsumoAutomatico();
+                break;
+            case 4:
+                calcularValorTotal();
+                break;
+            case 5:
+                editarCliente();
+                break;
+            case 6:
+                editarRegistrador();
+                break;
+            case 7:
+                consumoMinimoMaximo();
+                break;
+            case 8:
+                consumoPorFranjas();
+                break;
+            case 9:
+                consumoPorDias();
+                break;
+            case 10:
+                cargarConsumoCliente();
+                break;
+            case 11:
+                cambiarConsumoHora();
+                break;
+            case 12:
+                generarFacturaPDF();
+                break;
+            case 0:
+                System.out.println("Saliendo...");
+                break;
+            default:
+                System.out.println("Opción inválida.");
+        }
+    } while (opcion != 0);
+}
 
     private void crearCliente() {
         System.out.println("\n--- Crear Cliente ---");
@@ -86,7 +105,7 @@ public class Controlador {
         System.out.println("Registrador agregado.");
     }
 
-    private void cargarConsumo() {
+    private void cargarConsumoAutomatico() {
         for (Cliente c : clientes) {
             for (Registrador r : c.getRegistradores()) {
                 for (int d = 0; d < 31; d++) {
@@ -100,7 +119,7 @@ public class Controlador {
         System.out.println("Consumos cargados automáticamente.");
     }
 
-    private void calcularFactura() {
+    private void calcularValorTotal() {
         System.out.print("ID del cliente: ");
         String idCliente = sc.nextLine();
         Cliente cliente = buscarCliente(idCliente);
@@ -149,7 +168,7 @@ public class Controlador {
         System.out.println("Registrador no encontrado.");
     }
 
-    private void cargarConsumoClienteEspecifico() {
+    private void cargarConsumoCliente() {
         System.out.print("ID del cliente: ");
         String idCliente = sc.nextLine();
         Cliente cliente = buscarCliente(idCliente);
@@ -168,7 +187,7 @@ public class Controlador {
         System.out.println("Consumo cargado para el cliente " + idCliente);
     }
 
-    private void modificarConsumoHora() {
+    private void cambiarConsumoHora() {
         System.out.print("ID del cliente: ");
         String idCliente = sc.nextLine();
         Cliente cliente = buscarCliente(idCliente);
@@ -200,7 +219,7 @@ public class Controlador {
         System.out.println("Consumo actualizado correctamente.");
     }
 
-    private void verMinimoMaximo() {
+    private void consumoMinimoMaximo() {
         System.out.print("ID del cliente: ");
         Cliente cliente = buscarCliente(sc.nextLine());
         if (cliente == null) return;
@@ -211,7 +230,7 @@ public class Controlador {
         }
     }
 
-    private void verFranjas() {
+    private void consumoPorFranjas() {
         System.out.print("ID del cliente: ");
         Cliente cliente = buscarCliente(sc.nextLine());
         if (cliente == null) return;
@@ -224,7 +243,7 @@ public class Controlador {
         }
     }
 
-    private void verDias() {
+    private void consumoPorDias() {
         System.out.print("ID del cliente: ");
         Cliente cliente = buscarCliente(sc.nextLine());
         if (cliente == null) return;
@@ -236,7 +255,31 @@ public class Controlador {
             }
         }
     }
-
+    private void generarFacturaPDF() {
+        System.out.print("ID del cliente: ");
+        String idCliente = sc.nextLine();
+        Cliente cliente = buscarCliente(idCliente);
+        if (cliente == null) {
+            System.out.println("Cliente no encontrado.");
+            return;
+        }
+        System.out.print("ID del registrador: ");
+        String idRegistrador = sc.nextLine();
+        Registrador registrador = null;
+        for (Registrador r : cliente.getRegistradores()) {
+            if (r.getId().equals(idRegistrador)) {
+                registrador = r;
+                break;
+            }
+        }
+        if (registrador == null) {
+            System.out.println("Registrador no encontrado.");
+            return;
+        }
+        double total = Consumo.calcularValorTotal(registrador.getConsumo());
+        FacturaPDF.generarFactura(cliente, registrador, total);
+        System.out.println("Factura PDF generada correctamente.");
+    }
     private Cliente buscarCliente(String id) {
         for (Cliente c : clientes) {
             if (c.getId().equals(id)) return c;

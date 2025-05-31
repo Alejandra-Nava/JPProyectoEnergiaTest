@@ -68,7 +68,7 @@ public class Consumo {
         return dias;
     }
 
-    // ✅ NUEVO: útil para calcular el valor de una hora específica
+    // NUEVO: útil para calcular el valor de una hora específica
     public static double calcularValorHora(int hora, double consumo) {
         if (hora >= 0 && hora <= 6 && consumo >= 100 && consumo <= 300) {
             return consumo * 200;

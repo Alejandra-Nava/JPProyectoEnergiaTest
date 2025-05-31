@@ -1,5 +1,8 @@
 package Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Registrador {
     private String id;
     private String direccion;
@@ -61,4 +64,13 @@ public class Registrador {
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
     }
+    private List<Consumo> consumos = new ArrayList<>();
+
+public void agregarConsumo(Consumo consumo) {
+    consumos.add(consumo);
+}
+
+public List<Consumo> getConsumos() {
+    return consumos;
+}
 }
